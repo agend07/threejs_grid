@@ -28,12 +28,8 @@ const geometry = new THREE.BoxGeometry();
 const spacing = 1.1;
 const palette = [0x780000, 0xc1121f, 0xfdf0d5, 0x003049, 0x669bbc];
 
-const gridSize = 12;
+const gridSize = 2;
 const startPos = {x: -2, y: -2,	z: 0};
-
-// const material = new THREE.MeshStandardMaterial({ color: palette[0] })
-// const mesh = new THREE.Mesh(geometry, material);
-// scene.add(mesh);
 
 function createBox({ color = 0x00ff00, index = 0, x = 0, y = 0, z = 0, scale = 1 }) {
 	const material = new THREE.MeshStandardMaterial({ color })
@@ -49,13 +45,12 @@ function createBox({ color = 0x00ff00, index = 0, x = 0, y = 0, z = 0, scale = 1
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-// const renderer = new THREE.WebGLRenderer({ antialias: false });
 renderer.setSize(width, height);
 renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
 
-const ctrls = new OrbitControls(camera, renderer.domElement);
-ctrls.enableDamping = true;
+// const ctrls = new OrbitControls(camera, renderer.domElement);
+// ctrls.enableDamping = true;
 
 
 for (let x = 0; x < gridSize; x += 1) {
@@ -69,25 +64,25 @@ for (let x = 0; x < gridSize; x += 1) {
 	}
 }
 
-for (let x = 0; x < gridSize; x += 1) {
-  for (let y = 0; y < gridSize; y += 1) {
-    const hex = palette[Math.floor(Math.random() * palette.length)];
-    const color = new THREE.Color(hex);
-    const scale = (Math.floor(Math.random() * 8) + 1) * 0.2;
-    const z = Math.random() * 0.2 - 0.1;
-    const box = createBox({ color, index: x + y, x, y, z, scale });
-    boxGroup.add(box);
-  }
-}
+// for (let x = 0; x < gridSize; x += 1) {
+//   for (let y = 0; y < gridSize; y += 1) {
+//     const hex = palette[Math.floor(Math.random() * palette.length)];
+//     const color = new THREE.Color(hex);
+//     const scale = (Math.floor(Math.random() * 8) + 1) * 0.2;
+//     const z = Math.random() * 0.2 - 0.1;
+//     const box = createBox({ color, index: x + y, x, y, z, scale });
+//     boxGroup.add(box);
+//   }
+// }
 
 scene.add(boxGroup);
 
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
-scene.add(hemiLight);
+// const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
+// scene.add(hemiLight);
 
-// const directLight = new THREE.DirectionalLight(0xffffff, 1);
-// directLight.position.set(1, 1, 1);
-// scene.add(directLight);
+const directLight = new THREE.DirectionalLight(0xffffff, 1);
+directLight.position.set(1, 1, 1);
+scene.add(directLight);
 
 // const pointlight = new THREE.PointLight(0xffffff, 3);
 
@@ -115,7 +110,7 @@ function onClick(event) {
         targetPos.z += 4;
 
         tween = new Tween(camera.position, false)
-        .to(targetPos, 250)
+        .to(targetPos, 500)
         .onComplete(() => {
           console.log("Tween stopped");
           tween = null;
@@ -139,8 +134,12 @@ renderer.domElement.addEventListener('click', onClick, false);
 
 function animate() {
   renderer.render(scene, camera);
-  if (tween) {
-    tween.update();
-  }
-  ctrls.update();
+  // if (tween) {
+  //   tween.update();
+  //   console.log("Tween updating");
+  // }
+  // ctrls.update();
+  requestAnimationFrame(animate);
 }
+
+animate();
